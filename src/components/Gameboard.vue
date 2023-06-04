@@ -6,25 +6,25 @@ const emits = defineEmits<{
   (e: "makemove", index: number, board: Board): void;
 }>();
 
-const props = defineProps<{ currentPlayer: Player }>();
-
-const board: Board = Array(9).fill("");
+const props = defineProps<{
+  currentPlayer: Player;
+  board: Board;
+}>();
 
 const handleCellClick = (index: number) => {
-  if (board[index] !== "") {
+  if (props.board[index] !== "") {
     return;
   }
-  board[index] = props.currentPlayer?.symbol;
-  emits("makemove", index, board);
+  props.board[index] = props.currentPlayer?.symbol;
+  console.log(props.currentPlayer);
+  emits("makemove", index, props.board);
 };
 </script>
 
 <template>
   <div>
     <h3>
-      Current Player: {{ props.currentPlayer?.name }} ({{
-        props.currentPlayer?.symbol
-      }})
+      Current Player: {{ currentPlayer?.name }} ({{ currentPlayer?.symbol }})
     </h3>
     <div class="board">
       <div

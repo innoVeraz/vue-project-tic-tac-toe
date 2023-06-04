@@ -6,6 +6,15 @@ import Gameboard from "./Gameboard.vue";
 import { Board } from "../models/Board";
 import GameOver from "./GameOver.vue";
 
+type GameState = "player select" | "in progress" | "game over";
+
+let board: Board = Array(9).fill("");
+
+const player1 = ref<Player>(new Player("", "X"));
+const player2 = ref<Player>(new Player("", "O"));
+const currentPlayer = ref<Player>();
+const gameState = ref<GameState>("player select");
+
 let winner: any = null;
 
 const winningCombos = [
@@ -19,37 +28,24 @@ const winningCombos = [
   [2, 4, 6], // Diagonals
 ];
 
-type State = {
-  player1: Player;
-  player2: Player;
-  currentPlayer?: Player;
-  gameState: "player select" | "in progress" | "game over";
-};
-
-const state = ref<State>({
-  player1: new Player("", "X"),
-  player2: new Player("", "O"),
-  gameState: "player select",
-});
-
 const startGame = () => {
-  if (state.value.player1.name === "" || state.value.player2.name === "") {
+  if (player1.value.name === "" || player2.value.name === "") {
     return alert("fill in name");
   }
-  state.value.gameState = "in progress";
-  state.value.currentPlayer = state.value.player1;
+  gameState.value = "in progress";
+  currentPlayer.value = player1.value;
 };
 
 const makeMove = (index: number, board: Board) => {
   winner = checkWinner(board);
   if (winner) {
-    state.value.gameState = "game over";
+    gameState.value = "game over";
     return;
   }
-  state.value.currentPlayer =
-    state.value.currentPlayer?.symbol === state.value.player1.symbol
-      ? state.value.player2
-      : state.value.player1;
+  currentPlayer.value =
+    currentPlayer.value?.symbol === player1.value.symbol
+      ? player2.value
+      : player1.value;
 };
 
 const checkWinner = (board: Board) => {
@@ -57,10 +53,10 @@ const checkWinner = (board: Board) => {
     const [a, b, c] = combo;
     if (board[a] !== "" && board[a] === board[b] && board[a] === board[c]) {
       const winningSymbol = board[a];
-      if (winningSymbol === state.value.player1.symbol) {
-        return state.value.player1.name;
+      if (winningSymbol === player1.value.symbol) {
+        return player1.value.name;
       }
-      return state.value.player2.name;
+      return player2.value.name;
     }
   }
   if (!board.includes("")) {
@@ -69,55 +65,33 @@ const checkWinner = (board: Board) => {
   return null;
 };
 
-const resetGame = () => {};
+const playAgain = () => {
+  board = Array(9).fill("");
+  gameState.value = "in progress";
+};
 </script>
 
 <template>
   <PlayerSelect
-    v-if="state.gameState === 'player select'"
-    :player1="state.player1"
-    :player2="state.player2"
+    v-if="gameState === 'player select'"
+    :player1="player1"
+    :player2="player2"
     @startgame="startGame"
   ></PlayerSelect>
 
   <Gameboard
-    v-else-if="state.gameState === 'in progress'"
-    :current-player="state.currentPlayer"
+    v-else-if="gameState === 'in progress' && currentPlayer"
+    :current-player="currentPlayer"
+    :board="board"
     @makemove="makeMove"
   ></Gameboard>
 
-  <GameOver v-else-if="state.gameState === 'game over'" :winner="winner">
+  <GameOver
+    v-else-if="gameState === 'game over'"
+    :winner="winner"
+    @playagain="playAgain"
+  >
   </GameOver>
 </template>
 
-<style scoped lang="scss">
-.form {
-  margin-top: 4em;
-
-  h3 {
-    padding: 1em;
-  }
-}
-
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  gap: 5px;
-}
-.cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ccc;
-  height: 4em;
-  font-size: 36px;
-}
-.game-buttons-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-
-  margin-top: 1em;
-}
-</style>
+<style scoped lang="scss"></style>
