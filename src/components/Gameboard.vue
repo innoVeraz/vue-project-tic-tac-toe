@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { Board } from "../models/Board";
 import { Player } from "../models/Player";
-import Button from "./Button.vue";
 
 const emits = defineEmits<{
   (e: "makemove", index: number, board: Board): void;
-  (e: "resetgame"): void;
 }>();
 
 const props = defineProps<{
@@ -20,10 +18,6 @@ const handleCellClick = (index: number) => {
   props.board[index] = props.currentPlayer?.symbol;
   console.log(props.currentPlayer);
   emits("makemove", index, props.board);
-};
-
-const resetGame = () => {
-  emits("resetgame");
 };
 </script>
 
@@ -43,7 +37,6 @@ const resetGame = () => {
       </div>
     </div>
   </div>
-  <Button @click="resetGame"> Reset Game </Button>
 </template>
 
 <style scoped lang="scss">

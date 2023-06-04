@@ -63,7 +63,7 @@ const checkWinner = (board: Board) => {
     }
   }
   if (!board.includes("")) {
-    return "It's a draw, try again!";
+    return "draw";
   }
   return null;
 };
@@ -128,7 +128,6 @@ const saveGame = () => {
     :current-player="currentPlayer"
     :board="board"
     @makemove="makeMove"
-    @resetgame="resetGame"
   ></Gameboard>
 
   <GameOver
@@ -137,6 +136,7 @@ const saveGame = () => {
     :player2="player2"
     :winner="winner"
     @playagain="playAgain"
+    @resetgame="resetGame"
   >
   </GameOver>
 </template>
