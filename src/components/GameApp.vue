@@ -2,10 +2,12 @@
 import { ref } from "vue";
 import { Player } from "../models/Player";
 import PlayerSelect from "./PlayerSelect.vue";
+import Gameboard from "./Gameboard.vue";
+import { Board } from "../models/Board";
+import GameOver from "./GameOver.vue";
 
 let winner: any = null;
 
-const board = Array(9).fill("");
 const winningCombos = [
   [0, 1, 2],
   [3, 4, 5],
@@ -38,12 +40,8 @@ const startGame = () => {
   state.value.currentPlayer = state.value.player1;
 };
 
-const makeMove = (index: number) => {
-  if (board[index] !== "") {
-    return;
-  }
-  board[index] = state.value.currentPlayer?.symbol;
-  winner = checkWinner();
+const makeMove = (index: number, board: Board) => {
+  winner = checkWinner(board);
   if (winner) {
     state.value.gameState = "game over";
     return;
@@ -54,11 +52,15 @@ const makeMove = (index: number) => {
       : state.value.player1;
 };
 
-const checkWinner = () => {
+const checkWinner = (board: Board) => {
   for (let combo of winningCombos) {
     const [a, b, c] = combo;
     if (board[a] !== "" && board[a] === board[b] && board[a] === board[c]) {
-      return board[a];
+      const winningSymbol = board[a];
+      if (winningSymbol === state.value.player1.symbol) {
+        return state.value.player1.name;
+      }
+      return state.value.player2.name;
     }
   }
   if (!board.includes("")) {
@@ -78,39 +80,14 @@ const resetGame = () => {};
     @startgame="startGame"
   ></PlayerSelect>
 
-  <div v-else-if="state.gameState === 'in progress'">
-    <h3>
-      Current Player: {{ state.currentPlayer?.name }} ({{
-        state.currentPlayer?.symbol
-      }})
-    </h3>
-    <div class="board">
-      <div
-        class="cell"
-        v-for="(cell, index) in board"
-        :key="index"
-        @click="makeMove(index)"
-      >
-        {{ cell }}
-      </div>
-    </div>
-    <div class="game-buttons-container">
-      <button class="reset-current-game-btn" @click="resetCurrentGame">
-        Reset current game
-      </button>
-      <button @click="playAgain">Play again</button>
-      <button class="get-score-board-btn" @click="getScoreBoard">
-        Get Score
-      </button>
-    </div>
-  </div>
+  <Gameboard
+    v-else-if="state.gameState === 'in progress'"
+    :current-player="state.currentPlayer"
+    @makemove="makeMove"
+  ></Gameboard>
 
-  <div v-else-if="state.gameState === 'game over'">
-    <h3>Game Over!</h3>
-    <p>Winner: {{ winner }}</p>
-  </div>
-
-  <div></div>
+  <GameOver v-else-if="state.gameState === 'game over'" :winner="winner">
+  </GameOver>
 </template>
 
 <style scoped lang="scss">
