@@ -1,6 +1,6 @@
 <template>
   <aside :class="`${is_expanded && 'is-expanded'}`">
-    <div class="logo"><img src="../assets/vue.svg" alt="Vue" /></div>
+    <div class="logo"><img src="../assets/tictactoe.svg" alt="Vue" /></div>
 
     <div class="menu-toggle-wrap">
       <button class="menu-toggle" @click="ToggleMenu">
@@ -11,20 +11,12 @@
     <h3>Menu</h3>
     <div class="menu">
       <router-link to="/" class="button">
-        <span class="material-icons">home</span>
-        <span class="text">Home</span>
+        <span class="material-icons">games</span>
+        <span class="text">Game</span>
       </router-link>
       <router-link to="/about" class="button">
-        <span class="material-icons">article</span>
-        <span class="text">About</span>
-      </router-link>
-      <router-link to="/team" class="button">
-        <span class="material-icons">group</span>
-        <span class="text">Team</span>
-      </router-link>
-      <router-link to="/contact" class="button">
-        <span class="material-icons">email</span>
-        <span class="text">Contact</span>
+        <span class="material-icons">scoreboard</span>
+        <span class="text">Scores</span>
       </router-link>
     </div>
 
@@ -69,7 +61,7 @@ aside {
 
   .logo {
     margin-bottom: 1rem;
-
+    color: var(--light);
     img {
       width: 2rem;
     }
@@ -109,8 +101,8 @@ aside {
   }
 
   h3 {
-    color: var(--grey);
-    font-size: 0.875rem;
+    color: var(--primary);
+    font-size: 1em;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
   }

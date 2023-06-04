@@ -6,11 +6,14 @@
 
 <style scoped lang="scss">
 button {
-  background-color: var(--grey);
-  color: var(--light);
-  border: 1px solid var(--grey);
-  padding: 1em;
+  font-size: 1.5em;
+  background-color: var(--primary);
+  color: var(--dark);
+  width: 10em;
+  margin: auto;
   border-radius: 0.5em;
+
+  padding: 0.4em;
 
   &:hover {
     background-color: var(--primary-alt);

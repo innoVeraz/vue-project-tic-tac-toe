@@ -1,6 +1,7 @@
+<script setup lang="ts">
+import GameOver from "../components/GameOver.vue";
+</script>
+
 <template>
-  <main class="home-page">
-    <h1>About</h1>
-    <p>This is the About page</p>
-  </main>
+  <main class="about-page"></main>
 </template>

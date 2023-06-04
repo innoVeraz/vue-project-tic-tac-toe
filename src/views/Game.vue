@@ -4,8 +4,6 @@ import GameApp from "../components/GameApp.vue";
 
 <template>
   <main class="home-page">
-    <h1>TIC TAC TOE</h1>
-
     <GameApp></GameApp>
   </main>
 </template>

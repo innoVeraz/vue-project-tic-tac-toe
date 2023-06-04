@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Board } from "../models/Board";
 import { Player } from "../models/Player";
+import Button from "./Button.vue";
 
 const emits = defineEmits<{
   (e: "makemove", index: number, board: Board): void;
+  (e: "resetgame"): void;
 }>();
 
 const props = defineProps<{
@@ -19,13 +21,17 @@ const handleCellClick = (index: number) => {
   console.log(props.currentPlayer);
   emits("makemove", index, props.board);
 };
+
+const resetGame = () => {
+  emits("resetgame");
+};
 </script>
 
 <template>
   <div>
-    <h3>
-      Current Player: {{ currentPlayer?.name }} ({{ currentPlayer?.symbol }})
-    </h3>
+    <h2>
+      Players turn: {{ currentPlayer?.name }} ( {{ currentPlayer?.symbol }} )
+    </h2>
     <div class="board">
       <div
         class="cell"
@@ -36,25 +42,21 @@ const handleCellClick = (index: number) => {
         {{ cell }}
       </div>
     </div>
-    <!-- <div class="game-buttons-container">
-      <button class="reset-current-game-btn" @click="resetCurrentGame">
-        Reset current game
-      </button>
-      <button @click="playAgain">Play again</button>
-      <button class="get-score-board-btn" @click="getScoreBoard">
-        Get Score
-      </button>
-    </div> -->
   </div>
+  <Button @click="resetGame"> Reset Game </Button>
 </template>
 
 <style scoped lang="scss">
+h2 {
+  padding: 2em;
+}
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 5px;
 }
+
 .cell {
   display: flex;
   align-items: center;
@@ -63,11 +65,7 @@ const handleCellClick = (index: number) => {
   height: 4em;
   font-size: 36px;
 }
-.game-buttons-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-
+Button {
   margin-top: 1em;
 }
 </style>

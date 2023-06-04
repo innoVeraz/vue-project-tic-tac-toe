@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Player } from "../models/Player";
 import PlayerSelect from "./PlayerSelect.vue";
 import Gameboard from "./Gameboard.vue";
@@ -10,8 +10,8 @@ type GameState = "player select" | "in progress" | "game over";
 
 let board: Board = Array(9).fill("");
 
-const player1 = ref<Player>(new Player("", "X"));
-const player2 = ref<Player>(new Player("", "O"));
+const player1 = ref<Player>(new Player("", "X", 0));
+const player2 = ref<Player>(new Player("", "O", 0));
 const currentPlayer = ref<Player>();
 const gameState = ref<GameState>("player select");
 
@@ -34,11 +34,13 @@ const startGame = () => {
   }
   gameState.value = "in progress";
   currentPlayer.value = player1.value;
+  saveGame();
 };
 
 const makeMove = (index: number, board: Board) => {
   winner = checkWinner(board);
   if (winner) {
+    updateScores();
     gameState.value = "game over";
     return;
   }
@@ -46,6 +48,7 @@ const makeMove = (index: number, board: Board) => {
     currentPlayer.value?.symbol === player1.value.symbol
       ? player2.value
       : player1.value;
+  saveGame();
 };
 
 const checkWinner = (board: Board) => {
@@ -60,14 +63,55 @@ const checkWinner = (board: Board) => {
     }
   }
   if (!board.includes("")) {
-    return "Draw";
+    return "It's a draw, try again!";
   }
   return null;
+};
+
+const updateScores = () => {
+  if (winner === player1.value.name) {
+    player1.value.points++;
+  } else if (winner === player2.value.name) {
+    player2.value.points++;
+  }
 };
 
 const playAgain = () => {
   board = Array(9).fill("");
   gameState.value = "in progress";
+};
+
+const resetGame = () => {
+  player1.value = new Player("", "X", 0);
+  player2.value = new Player("", "O", 0);
+  currentPlayer.value = undefined;
+  gameState.value = "player select";
+  board = Array(9).fill("");
+
+  localStorage.removeItem("game");
+};
+
+onMounted(() => {
+  const savedGameState = localStorage.getItem("game");
+  if (savedGameState) {
+    const savedData = JSON.parse(savedGameState);
+    player1.value = savedData.player1;
+    player2.value = savedData.player2;
+    board = savedData.board;
+    currentPlayer.value = savedData.currentPlayer;
+    gameState.value = savedData.gameState;
+  }
+});
+
+const saveGame = () => {
+  const gameData = {
+    player1: player1.value,
+    player2: player2.value,
+    currentPlayer: currentPlayer.value,
+    gameState: gameState.value,
+    board: board,
+  };
+  localStorage.setItem("game", JSON.stringify(gameData));
 };
 </script>
 
@@ -84,10 +128,13 @@ const playAgain = () => {
     :current-player="currentPlayer"
     :board="board"
     @makemove="makeMove"
+    @resetgame="resetGame"
   ></Gameboard>
 
   <GameOver
     v-else-if="gameState === 'game over'"
+    :player1="player1"
+    :player2="player2"
     :winner="winner"
     @playagain="playAgain"
   >

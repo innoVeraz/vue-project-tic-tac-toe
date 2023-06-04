@@ -11,8 +11,8 @@ import Sidebar from "./components/Sidebar.vue";
 
 <style lang="scss">
 :root {
-  --primary: #39f1eb;
-  --primary-alt: #2ecdc5;
+  --primary: #51dfc3;
+  --primary-alt: #39b19f;
   --grey: #6a9494;
   --dark: #264651;
   --dark-alt: #44798a;
@@ -24,7 +24,8 @@ import Sidebar from "./components/Sidebar.vue";
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Fira sans", sans-serif;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 500;
 }
 
 body {
