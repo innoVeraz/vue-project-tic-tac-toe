@@ -23,7 +23,7 @@ const resetGame = () => {
   <div class="wrapper">
     <h1>Game Over!</h1>
     <h2 v-if="props.winner === 'draw'">It's a draw, try again!</h2>
-    <h2 v-else>Gongrats {{ props.winner }}! You won this round!</h2>
+    <h2 v-else>Congrats {{ props.winner }}! You won this round!</h2>
 
     <h3>
       {{ props.player1.name }}: <span>{{ props.player1.points }} points</span>

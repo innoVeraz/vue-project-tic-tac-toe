@@ -20,12 +20,11 @@ const startGame = () => {
   </div>
   <div class="wrapper">
     <form @submit.prevent="startGame">
-      <div>
+      <div class="player-input">
         <label>Player {{ props.player1.symbol }} Name:</label>
         <input type="text" v-model="props.player1.name" />
       </div>
-      <div>
-        <br />
+      <div class="player-input">
         <label> Player {{ props.player2.symbol }} Name: </label>
         <input type="text" v-model="props.player2.name" />
       </div>
@@ -50,18 +49,20 @@ const startGame = () => {
 label {
   font-size: 1.2em;
 }
+.player-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
 
+  padding-bottom: 3em;
+}
 input {
   font-size: 1.2em;
   text-align: center;
   border-radius: 0.3em;
   border: 1px solid grey;
 
-  margin-left: 1em;
   padding: 0.2em;
-}
-
-Button {
-  margin-top: 2em;
 }
 </style>
